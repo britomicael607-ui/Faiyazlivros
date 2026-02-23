@@ -1,1 +1,237 @@
-<!DOCTYPE html>\n<html lang="en">\n<head>\n    <meta charset="UTF-8">\n    <meta name="viewport" content="width=device-width, initial-scale=1.0">\n    <title>Faiyazlivros Book Catalog</title>\n    <link rel="stylesheet" href="styles.css">\n</head>\n<body>\n    <header>\n        <h1>Faiyazlivros Book Catalog</h1>\n    </header>\n    <main>\n        <section>\n            <h2>Books</h2>\n            <ul>\n                <li>Book 1: Title, Author, Year</li>\n                <li>Book 2: Title, Author, Year</li>\n                <li>Book 3: Title, Author, Year</li>\n                <li>Book 4: Title, Author, Year</li>\n                <li>Book 5: Title, Author, Year</li>\n            </ul>\n        </section>\n    </main>\n    <footer>\n        <p>&copy; 2026 Faiyazlivros</p>\n    </footer>\n</body>\n</html>
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faiyazlivros | Catálogo Sobrenatural</title>
+    <style>
+        :root {
+            --dark-red: #4a0404;
+            --blood-red: #8b0000;
+            --impala-black: #0a0a0a;
+            --parchment: #d2b48c;
+            --angel-blue: #00eeff;
+        }
+
+        body {
+            background-color: var(--impala-black);
+            background-image: radial-gradient(circle, #1a1a1a 0%, #000 100%);
+            color: var(--parchment);
+            font-family: 'Courier New', Courier, monospace;
+            margin: 0;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 2px solid var(--blood-red);
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+            text-shadow: 0 0 10px var(--blood-red);
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+        }
+
+        .welcome-msg {
+            font-style: italic;
+            color: var(--angel-blue);
+            margin-top: 10px;
+        }
+
+        .search-container {
+            margin: 20px auto;
+            max-width: 600px;
+            display: flex;
+            gap: 10px;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 12px;
+            background: #111;
+            border: 1px solid var(--blood-red);
+            color: white;
+            border-radius: 4px;
+        }
+
+        .filters {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            background: transparent;
+            border: 1px solid var(--parchment);
+            color: var(--parchment);
+            padding: 8px 15px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background: var(--blood-red);
+            color: white;
+            box-shadow: 0 0 15px var(--blood-red);
+        }
+
+        .catalog {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 25px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .item-card {
+            background: #151515;
+            border: 1px solid #333;
+            padding: 15px;
+            text-align: center;
+            transition: transform 0.3s, border-color 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .item-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--blood-red);
+            box-shadow: 0 0 20px rgba(139, 0, 0, 0.4);
+        }
+
+        .item-card h3 {
+            font-size: 1.1rem;
+            margin: 10px 0;
+            height: 40px;
+        }
+
+        .price {
+            color: var(--angel-blue);
+            font-weight: bold;
+            font-size: 1.2rem;
+            display: block;
+            margin-top: 10px;
+        }
+
+        .category-tag {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            color: #888;
+        }
+
+        .empty-msg {
+            text-align: center;
+            grid-column: 1 / -1;
+            font-size: 1.5rem;
+            opacity: 0.5;
+            padding: 50px;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>FAIYAZLIVROS</h1>
+    <p class="welcome-msg">"Saving Books, Hunting Deals, The Family Business. Bem-vindo."</p>
+    
+    <div class="search-container">
+        <input type="text" id="searchInput" placeholder="Pesquisar por título ou artefato..." onkeyup="filterItems()">
+    </div>
+
+    <div class="filters">
+        <button class="filter-btn active" onclick="filterCategory('todos')">Todos</button>
+        <button class="filter-btn" onclick="filterCategory('manga')">Mangás</button>
+        <button class="filter-btn" onclick="filterCategory('hq')">HQs</button>
+        <button class="filter-btn" onclick="filterCategory('livros')">Livros</button>
+        |
+        <button class="filter-btn" onclick="filterGenre('terror')">Terror</button>
+        <button class="filter-btn" onclick="filterGenre('acao')">Ação</button>
+        <button class="filter-btn" onclick="filterGenre('romance')">Romance</button>
+    </div>
+</header>
+
+<main class="catalog" id="catalog">
+    </main>
+
+<script>
+    const items = [
+        { title: "Cdz Hades #2 (jbc)", price: 12.00, cat: "manga", genre: "acao" },
+        { title: "Tiger & bunny #1", price: 11.90, cat: "manga", genre: "acao" },
+        { title: "Buso renkin #1", price: 10.90, cat: "manga", genre: "acao" },
+        { title: "Quack #1", price: 18.00, cat: "manga", genre: "comedia" },
+        { title: "Quack #2", price: 18.00, cat: "manga", genre: "comedia" },
+        { title: "Shinshoku kiss #1", price: 10.00, cat: "manga", genre: "romance" },
+        { title: "Lúcifer e o martelo #2", price: 13.90, cat: "manga", genre: "acao" },
+        { title: "Terra formars 2", price: 14.90, cat: "manga", genre: "terror" },
+        { title: "Hitman 3", price: 10.90, cat: "manga", genre: "acao" },
+        { title: "Speed racer 2", price: 3.00, cat: "manga", genre: "acao" },
+        { title: "Ultramarine magmell #2", price: 22.90, cat: "manga", genre: "acao" },
+        { title: "Love hina #6", price: 14.50, cat: "manga", genre: "romance" },
+        { title: "Love hina #7", price: 14.50, cat: "manga", genre: "romance" }
+    ];
+
+    function displayItems(data) {
+        const catalog = document.getElementById('catalog');
+        catalog.innerHTML = '';
+
+        if (data.length === 0) {
+            catalog.innerHTML = '<p class="empty-msg">Nenhum artefato encontrado nesta categoria...</p>';
+            return;
+        }
+
+        data.forEach(item => {
+            const card = document.createElement('div');
+            card.className = 'item-card';
+            card.innerHTML = `
+                <span class="category-tag">${item.cat} | ${item.genre}</span>
+                <h3>${item.title}</h3>
+                <span class="price">R$ ${item.price.toFixed(2).replace('.', ',')}</span>
+            `;
+            catalog.appendChild(card);
+        });
+    }
+
+    function filterItems() {
+        const query = document.getElementById('searchInput').value.toLowerCase();
+        const filtered = items.filter(item => item.title.toLowerCase().includes(query));
+        displayItems(filtered);
+    }
+
+    function filterCategory(cat) {
+        if (cat === 'todos') {
+            displayItems(items);
+        } else {
+            const filtered = items.filter(item => item.cat === cat);
+            displayItems(filtered);
+        }
+        updateActiveBtn();
+    }
+
+    function filterGenre(genre) {
+        const filtered = items.filter(item => item.genre === genre);
+        displayItems(filtered);
+    }
+
+    function updateActiveBtn() {
+        const btns = document.querySelectorAll('.filter-btn');
+        btns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                btns.forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+    }
+
+    displayItems(items);
+    updateActiveBtn();
+</script>
+
+</body>
+</html>
